@@ -5,6 +5,7 @@
 #include <vector>
 #include "physics.h"
 #include "position.h"
+#include "tables.h"
 
 using namespace std;
 
@@ -14,7 +15,7 @@ public:
 	Projectile();
 private:
 
-	void computeNewPosition();
+	void computeNewPosition(Tables &tables);
 
 	Physics physics;
 	Position  projectilePath[20];

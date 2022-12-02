@@ -180,59 +180,57 @@ double Physics::updateNewPosition(Tables table)
 	// intial the horizontal and vertical velocity
 	this->hVel = computeHorizontalComponent(this->m_Angle, this->m_V.getV());
 	this->vVel = computeVerticalComponent(this->m_Angle, this->m_V.getV());
+	// current air density
+	this->airDensity = altitudeTo(table.getDensity(this->m_Alt.getAlt()));
+	// current gravity
+	this->gravity = altitudeTo(table.getGravity(this->m_Alt.getAlt()));
+	// current sound speed
+	this->s_V = altitudeTo(table.getSpeedOfSound(this->m_Alt.getAlt()));
+	// current mach
+	this->mach = updateMach();
+	// current drag coefficient
+	this->dragCoeffcient = machTo(table.getDrag(this->mach));
+	// current drag force
+	this->m_F.setDF(this->m_F.updateDF(this->dragCoeffcient, this->airDensity, this->m_V.getV(), this->area));
 
-	while (this->m_Alt.getAlt() >= 0)
-	{
-		// current air density
-		this->airDensity = altitudeTo(table.getDensity(this->m_Alt.getAlt()));
-		// current gravity
-		this->gravity = altitudeTo(table.getGravity(this->m_Alt.getAlt()));
-		// current sound speed
-		this->s_V = altitudeTo(table.getSpeedOfSound(this->m_Alt.getAlt()));
-		// current mach
-		this->mach = updateMach();
-		// current drag coefficient
-		this->dragCoeffcient = machTo(table.getDrag(this->mach));
-		// current drag force
-		this->m_F.setDF(this->m_F.updateDF(this->dragCoeffcient, this->airDensity, this->m_V.getV(), this->area));
+	// the accleeration due to the drag force
+	double a_F = this->m_A.updateA(this->m_F.getDF(), this->mass);
+	// horizontal acceleration
+	this->hAcc = -computeHorizontalComponent(this->m_Angle, a_F);
+	// vertical acceleration
+	this->vAcc = -this->gravity - computeVerticalComponent(this->m_Angle, a_F);
 
-		// the accleeration due to the drag force
-		double a_F = this->m_A.updateA(this->m_F.getDF(), this->mass);
-		// horizontal acceleration
-		this->hAcc = -computeHorizontalComponent(this->m_Angle, a_F);
-		// vertical acceleration
-		this->vAcc = -this->gravity - computeVerticalComponent(this->m_Angle, a_F);
+	// new x and new y
+	double xDistance = computeDistance(this->hVel, this->hAcc, this->time_per_frame);
+	double yDistance = computeDistance(this->vVel, this->vAcc, this->time_per_frame);
+	this->x = this->x + xDistance;
+	this->y = this->y + yDistance;
 
-		// new x and new y
-		double xDistance = computeDistance(this->hVel, this->hAcc, this->time_per_frame);
-		double yDistance = computeDistance(this->vVel, this->vAcc, this->time_per_frame);
-		this->x = this->x + xDistance;
-		this->y = this->y + yDistance;
+	// new alttitude
+	this->m_Alt.setAlt(this->m_Alt.updateAlt(this->y));
 
-		// new alttitude
-		this->m_Alt.setAlt(this->m_Alt.updateAlt(this->y));
+	//if (this->m_Alt.getAlt() < 0)
+	//{
+	//	double xPrev = this->x - xDistance;
+	//	double yPrev = this->y - yDistance;
+	//	this->t -= 0.01;
+	//	this->x = this->linerInterpolation(yPrev, xPrev, 0.0, this->y, this->x);
+	//	this->y = 0;
+	//	this->m_Alt.setAlt(-1.0);
+	//}
+	// new acceleration (this is acctually useless)
+	this->m_A.setA(-computeTotalComponent(this->hAcc, this->vAcc));
+	// new horizontal and vertical velocity
+	this->hVel = this->m_V.updateV(this->hVel, this->hAcc);
+	this->vVel = this->m_V.updateV(this->vVel, this->vAcc);
+	// new angle
+	this->m_Angle.setAngle(this->m_Angle.updateAngle(hVel, vVel));
+	// new total velocity
+	this->m_V.setV(computeTotalComponent(this->hVel, this->vVel));
 
-		if (this->m_Alt.getAlt() < 0)
-		{
-			double xPrev = this->x - xDistance;
-			double yPrev = this->y - yDistance;
-			this->t -= 0.01;
-			this->x = this->linerInterpolation(yPrev, xPrev, 0.0, this->y, this->x);
-			this->y = 0;
-			this->m_Alt.setAlt(-1.0);
-		}
-		// new acceleration (this is acctually useless)
-		this->m_A.setA(-computeTotalComponent(this->hAcc, this->vAcc));
-		// new horizontal and vertical velocity
-		this->hVel = this->m_V.updateV(this->hVel, this->hAcc);
-		this->vVel = this->m_V.updateV(this->vVel, this->vAcc);
-		// new angle
-		this->m_Angle.setAngle(this->m_Angle.updateAngle(hVel, vVel));
-		// new total velocity
-		this->m_V.setV(computeTotalComponent(this->hVel, this->vVel));
-
-		this->t = this->t + 0.01;
-		return this->x, this->y;
-	}
-
+	this->t = this->t + 0.01;
+	return this->x, this->y;
+	
 }
+
+	

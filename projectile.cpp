@@ -5,7 +5,7 @@ Projectile::Projectile()
 
 }
 
-void Projectile::computeNewPosition()
+void Projectile::computeNewPosition(Tables &tables)
 {
-	this->x, this->y = this->physics.updateNewPosition();
+	this->x, this->y = this->physics.updateNewPosition(tables);
 }

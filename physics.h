@@ -14,6 +14,10 @@ using namespace std;
 
 class Physics
 {
+	
+
+public:
+
 	class Angle
 	{
 	public:
@@ -71,7 +75,6 @@ class Physics
 		double dragForce;
 	};
 
-public:
 	Physics();
 
 	void setMyAlt(double alt) { this->m_Alt.setAlt(alt); }
@@ -124,4 +127,4 @@ private:
 	double computeTotalComponent(double hComp, double vComp);
 	double computeDistance(double v, double a, double t);
 
-}; #pragma once
+}; 
