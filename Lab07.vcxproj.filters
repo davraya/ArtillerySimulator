@@ -33,6 +33,12 @@
     <ClCompile Include="Lab07.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="physics.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="projectile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ground.h">
@@ -54,6 +60,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="testGround.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="physics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tables.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="projectile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
