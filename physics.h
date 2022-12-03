@@ -26,12 +26,24 @@ public:
 			this->radians = 0;
 		}
 		void setAngle(double angle);
-		double getAngle() { return this->radians; };
+		double getAngle() { return radians; };
 		double updateAngle(double vVel, double hVel);
+		void operator+=(double rhs) {
+			radians += rhs;
+		}
+		void operator-=(double rhs) {
+			radians -= rhs;
+		}
+		bool operator>=(double rhs) {
+			if (radians >= rhs)
+				return true;
+			return false;
+		}
 	private:
 		double getRadians();
 		void normalize();
 		double radians;
+		
 	};
 
 	class Altitude

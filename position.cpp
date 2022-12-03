@@ -8,6 +8,7 @@
  ************************************************************************/
 
 #include "position.h"
+#include "physics.h"
 #include <cassert>
 
 
