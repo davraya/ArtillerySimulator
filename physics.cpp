@@ -34,9 +34,9 @@ double Physics::Angle::updateAngle(double hVel, double vVel)
 	return new_r;
 }
 
-double Physics::Angle::getRadians()
+double Physics::Angle::getDegrees()
 {
-	return this->radians;
+	return this->radians * (180.0 / M_PI);
 }
 
 
@@ -139,13 +139,13 @@ double Physics::updateMach()
 
 double Physics::computeVerticalComponent(Angle angle, double total)
 {
-	double vComp = total * cos(angle.getAngle());
+	double vComp = total * cos(angle.getRadians());
 	return vComp;
 }
 
 double Physics::computeHorizontalComponent(Angle angle, double total)
 {
-	double hComp = total * sin(angle.getAngle());
+	double hComp = total * sin(angle.getRadians());
 	return hComp;
 }
 
@@ -175,21 +175,21 @@ double Physics::computeArea(double d)
 
 }
 
-double Physics::updateNewPosition(Tables table)
+pair<double, double> Physics::updateNewPosition()
 {
 	// intial the horizontal and vertical velocity
 	this->hVel = computeHorizontalComponent(this->m_Angle, this->m_V.getV());
 	this->vVel = computeVerticalComponent(this->m_Angle, this->m_V.getV());
 	// current air density
-	this->airDensity = altitudeTo(table.getDensity(this->m_Alt.getAlt()));
+	this->airDensity = altitudeTo(this->tables.getDensity(this->m_Alt.getAlt()));
 	// current gravity
-	this->gravity = altitudeTo(table.getGravity(this->m_Alt.getAlt()));
+	this->gravity = altitudeTo(this->tables.getGravity(this->m_Alt.getAlt()));
 	// current sound speed
-	this->s_V = altitudeTo(table.getSpeedOfSound(this->m_Alt.getAlt()));
+	this->s_V = altitudeTo(this->tables.getSpeedOfSound(this->m_Alt.getAlt()));
 	// current mach
 	this->mach = updateMach();
 	// current drag coefficient
-	this->dragCoeffcient = machTo(table.getDrag(this->mach));
+	this->dragCoeffcient = machTo(this->tables.getDrag(this->mach));
 	// current drag force
 	this->m_F.setDF(this->m_F.updateDF(this->dragCoeffcient, this->airDensity, this->m_V.getV(), this->area));
 
@@ -228,8 +228,10 @@ double Physics::updateNewPosition(Tables table)
 	// new total velocity
 	this->m_V.setV(computeTotalComponent(this->hVel, this->vVel));
 
-	this->t = this->t + 0.01;
-	return this->x, this->y;
+	this->t = this->t + 0.5;
+
+	pair<double, double> pxy(x, y);
+	return pxy;
 	
 }
 

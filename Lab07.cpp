@@ -38,20 +38,21 @@ public:
       // Generate the ground and set the vertical position of the howitzer.
       ground.reset(ptHowitzer);
 
+
       // This is to make the bullet travel across the screen. Notice how there are 
       // 20 pixels, each with a different age. This gives the appearance
       // of a trail that fades off in the distance.
-      for (int i = 0; i < 20; i++)
-      {
-         projectilePath[i].setPixelsX((double)i * 2.0);
-         projectilePath[i].setPixelsY(ptUpperRight.getPixelsY() / 1.5);
-      }
+      double x = 10000;
+      double y = 2500;
+      projectile.initPosition(10000, 2500, 0);
+      
+
    }
 
    Ground ground;                 // the ground
-   Position  projectilePath[20];  // path of the projectile
    Position  ptHowitzer;          // location of the howitzer
    Position  ptUpperRight;        // size of the screen
+   Projectile projectile;
    double angle;                  // angle of the howitzer 
    double time;                   // amount of time since the last firing
 };
@@ -97,15 +98,9 @@ void callBack(const Interface* pUI, void* p)
    pDemo->time += 0.5;
 
    // move the projectile across the screen
-   for (int i = 0; i < 20; i++)
-   {
-      // this bullet is moving left at 1 pixel per frame
-      double x = pDemo->projectilePath[i].getPixelsX();
-      x -= 1.0;
-      if (x < 0)
-         x = pDemo->ptUpperRight.getPixelsX();
-      pDemo->projectilePath[i].setPixelsX(x);
-   }
+
+    pDemo->projectile.computeNewPosition();
+   
 
    //
    // draw everything
@@ -120,9 +115,13 @@ void callBack(const Interface* pUI, void* p)
    gout.drawHowitzer(pDemo->ptHowitzer, pDemo->angle, pDemo->time);
 
    // draw the projectile
-   for (int i = 0; i < 20; i++)
-      gout.drawProjectile(pDemo->projectilePath[i], 0.5 * (double)i);
 
+   int i = 0;
+   for (vector<Position>::reverse_iterator it = pDemo->projectile.paths.rbegin(); it != pDemo->projectile.paths.rend(); it++)
+   {
+       gout.drawProjectile((*it), 0.5 * (double)i++);
+   }
+       
    // draw some text on the screen
    gout.setf(ios::fixed | ios::showpoint);
    gout.precision(1);

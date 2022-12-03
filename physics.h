@@ -26,10 +26,11 @@ public:
 			this->radians = 0;
 		}
 		void setAngle(double angle);
-		double getAngle() { return this->radians; };
+		double getRadians() { return this->radians; };
 		double updateAngle(double vVel, double hVel);
+		double getDegrees();
 	private:
-		double getRadians();
+		
 		void normalize();
 		double radians;
 	};
@@ -87,10 +88,13 @@ public:
 	}
 	void setMyVel(double v) { this->m_V.setV(v); }
 	void setMyAcc(double a) { this->m_A.setA(a); }
+	void setMyXPosition(double x) { this->x = x; }
+	void setMyYPosition(double y) { this->y = y; }
+	double getDegrees() { return this->m_Angle.getDegrees(); }
 
 
 	// lab 07 demo
-	double updateNewPosition(Tables table);
+	pair<double, double> updateNewPosition();
 
 	double t;
 private:
@@ -100,6 +104,7 @@ private:
 	DragForce m_F;
 	Altitude m_Alt;
 	Angle m_Angle;
+	Tables tables;
 	double mach;
 	double gravity;
 	double dragCoeffcient;
