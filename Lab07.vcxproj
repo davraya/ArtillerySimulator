@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ground.cpp" />
+    <ClCompile Include="howitzer.cpp" />
     <ClCompile Include="Lab07.cpp" />
     <ClCompile Include="physics.cpp" />
     <ClCompile Include="position.cpp" />
@@ -150,6 +151,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ground.h" />
+    <ClInclude Include="howitzer.h" />
     <ClInclude Include="position.h" />
     <ClInclude Include="physics.h" />
     <ClInclude Include="projectile.h" />

@@ -21,6 +21,7 @@ Position Howitzer::getPosition() const
     return position;
 }
 
+
 Position Howitzer::getProjectilePosition()
 {
    
@@ -60,3 +61,9 @@ double Howitzer::getProjectileAirTime()
 {
    return projectile.getAirTime();
 }
+
+void Howitzer::setPositionX(double x)
+{
+    this->position.setMetersX(x);
+}
+

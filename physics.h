@@ -30,9 +30,11 @@ public:
 	
 		void operator+=(double rhs) {
 			radians += rhs;
+			normalize();
 		}
 		void operator-=(double rhs) {
 			radians -= rhs;
+			normalize();
 		}
 		bool operator>=(double rhs) {
 			if (radians >= rhs)
