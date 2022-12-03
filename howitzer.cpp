@@ -1,5 +1,8 @@
 #include "howitzer.h"
 
-void howitzer::moveBarrel()
+
+
+Position Howitzer::getPosition() const
 {
+    return position;
 }
