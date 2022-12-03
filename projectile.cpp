@@ -1,9 +1,5 @@
 #include "projectile.h"
 
-Projectile::Projectile()
-{
-
-}
 
 void Projectile::initPosition(double x, double y, double angle)
 {

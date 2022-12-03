@@ -12,10 +12,11 @@ using namespace std;
 class Projectile
 {
 public:
-	Projectile();
 	Position &getPosition() { return this->p; };
 	double getDegree() { return this->physics.getDegrees(); };
 	void initPosition(double x, double y, double angle);
+	double getAltitude() { return this->physics.getAltitude(); };
+	double getSpeed() { return this->physics.getSpeed(); };
 
 	void computeNewPosition();
 	vector<Position> paths;

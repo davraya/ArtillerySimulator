@@ -91,6 +91,8 @@ public:
 	void setMyXPosition(double x) { this->x = x; }
 	void setMyYPosition(double y) { this->y = y; }
 	double getDegrees() { return this->m_Angle.getDegrees(); }
+	double getAltitude() { return this->m_Alt.getAlt(); }
+	double getSpeed() { return this->m_V.getV(); };
 
 
 	// lab 07 demo

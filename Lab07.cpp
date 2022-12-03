@@ -106,7 +106,7 @@ void callBack(const Interface* pUI, void* p)
    // draw everything
    //
 
-   ogstream gout(Position(10.0, pDemo->ptUpperRight.getPixelsY() - 20.0));
+   ogstream gout(Position(10.0, pDemo->ptUpperRight.getPixelsY()- 20));
 
    // draw the ground first
    pDemo->ground.draw(gout);
@@ -115,18 +115,29 @@ void callBack(const Interface* pUI, void* p)
    gout.drawHowitzer(pDemo->ptHowitzer, pDemo->angle, pDemo->time);
 
    // draw the projectile
-
+   double Mountain_height = pDemo->ground.getElevationMeters(pDemo->projectile.getPosition());
    int i = 0;
-   for (vector<Position>::reverse_iterator it = pDemo->projectile.paths.rbegin(); it != pDemo->projectile.paths.rend(); it++)
+   if (pDemo->projectile.getPosition().getMetersY() >= Mountain_height)
    {
-       gout.drawProjectile((*it), 0.5 * (double)i++);
+       for (vector<Position>::reverse_iterator it = pDemo->projectile.paths.rbegin(); it != pDemo->projectile.paths.rend(); it++)
+       {
+           gout.drawProjectile((*it), 0.5 * (double)i++);
+       }
+       // draw some text on the screen
+       gout.setf(ios::fixed | ios::showpoint);
+       gout.precision(1);
+       Position label;
+       label.setPixelsX(560);
+       label.setPixelsY(460);
+       gout.setPosition(label);
+       gout << "hang time: " << pDemo->time << "s\n"
+           << "distance:  " << pDemo->projectile.getPosition().getMetersX() << "m\n"
+           << "altitude:  " << pDemo->projectile.getAltitude() << " m\n"
+           << "speed:     " << pDemo->projectile.getSpeed() << " m/s\n";
    }
+   
        
-   // draw some text on the screen
-   gout.setf(ios::fixed | ios::showpoint);
-   gout.precision(1);
-   gout << "Time since the bullet was fired: "
-        << pDemo->time << "s\n";
+   
 }
 
 double Position::metersFromPixels = 40.0;
