@@ -12,17 +12,21 @@ using namespace std;
 class Projectile
 {
 public:
-	Projectile();
+	Position &getPosition() { return this->p; };
+	double getDegree() { return this->physics.getDegrees(); };
+	void initPosition(double x, double y, double angle);
+	double getAltitude() { return this->physics.getAltitude(); };
+	double getSpeed() { return this->physics.getSpeed(); };
+
+	void computeNewPosition();
+	vector<Position> paths;
 private:
 
-	void computeNewPosition(Tables &tables);
-
 	Physics physics;
-	Position  projectilePath[20];
-	double x;
-	double y;
 	double mass;
 	double diameter;
 	double area;
-
+	Position p;
+	pair<double, double> getNewPositionInTime();
+	int count = 0;
 };
