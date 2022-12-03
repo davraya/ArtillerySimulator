@@ -113,8 +113,8 @@ public:
 	double getSpeed() { return this->m_V.getV(); };
 
 
-	// lab 07 demo
 	pair<double, double> updateNewPosition();
+	void initStatus();
 
 	double t;
 private:

@@ -20,8 +20,8 @@
 #include "howitzer.h"
 #include "physics.h"
 #include <string>
-#include <stdlib.h>
-#include <ctime>
+#include <iomanip>
+
 using namespace std;
 
 /*************************************************************************
@@ -38,10 +38,7 @@ public:
       //,angle(0.0)
    {
       // Set the horizontal position of the howitzer. This should be random.
-       srand((int)time(0));
-       int randX = (rand() % (28000 - 1000)) + 1000;
-       cout << randX << endl;
-       this->howitzer.setPositionX(randX);
+       
 
 
       // Generate the ground and set the vertical position of the howitzer.
@@ -51,9 +48,6 @@ public:
       // This is to make the bullet travel across the screen. Notice how there are 
       // 20 pixels, each with a different age. This gives the appearance
       // of a trail that fades off in the distance.
-      double x = 10000;
-      double y = 2500;
-      projectile.initPosition(10000, 2500, 0);
       
 
    }
@@ -66,8 +60,6 @@ public:
    Howitzer  * ptHowitzer = &howitzer;          // location of the howitzer
    Position  ptUpperRight;        // size of the screen
    //double angle;                  // angle of the howitzer 
-
-   Projectile projectile;
 
    double hangTime;                   // amount of time since the last firing
 };
@@ -100,23 +92,28 @@ void callBack(const Interface* pUI, void* p)
 
    // move by a little
 
-   //if (pUI->isUp())
-   //   howitzerAngle += (howitzerAngle >= 0 ? -0.003 : 0.003);
-   //if (pUI->isDown())
-   //   howitzerAngle += (howitzerAngle >= 0 ? 0.003 : -0.003);
-
    if (pUI->isUp())
-      *howitzerAngle += (currentAngle >= 0 ? 0.003 : -0.003);
+       *howitzerAngle += 0.01;
    if (pUI->isDown())
-      *howitzerAngle += (currentAngle >= 0 ? -0.003 : 0.003);
+       *howitzerAngle -= 0.01;
 
    // fire that gun
    if (pUI->isSpace())
-      pDemo->hangTime = 0.0;
+   {   
+       if (pDemo->howitzer.canFire)
+       {
+           pDemo->howitzer.fire();
+           pDemo->hangTime = 0.0;
+           pDemo->howitzer.canFire = false;
+       }
+       
+   }
+      
    //
    // perform all the game logic
    //
-
+   if (not pDemo->howitzer.canFire)
+        pDemo->howitzer.projectile->computeNewPosition();
 
 
    // advance time by half a second.
@@ -124,7 +121,7 @@ void callBack(const Interface* pUI, void* p)
 
    // move the projectile across the screen
 
-    pDemo->projectile.computeNewPosition();
+    
    
 
    //
@@ -136,7 +133,7 @@ void callBack(const Interface* pUI, void* p)
    // draw the ground first
    pDemo->ground.draw(gout);
    gout.setPosition(Position(4000, 8000));
-   gout << "The angle of the barell is:" << howitzerAngle->getDegrees();
+   gout << "The angle of the barell is:" <<fixed << setprecision(3) << howitzerAngle->getDegrees();
 
    // draw the howitzer
    Position howitzerPosition = pDemo->howitzer.getPosition();
@@ -145,11 +142,11 @@ void callBack(const Interface* pUI, void* p)
    
    // draw the projectile
 
-   double Mountain_height = pDemo->ground.getElevationMeters(pDemo->projectile.getPosition());
+   double Mountain_height = pDemo->ground.getElevationMeters(pDemo->howitzer.projectile->getPosition());
    int i = 0;
-   if (pDemo->projectile.getPosition().getMetersY() >= Mountain_height)
+   if (pDemo->howitzer.projectile->getPosition().getMetersY() >= Mountain_height)
    {
-       for (vector<Position>::reverse_iterator it = pDemo->projectile.paths.rbegin(); it != pDemo->projectile.paths.rend(); it++)
+       for (vector<Position>::reverse_iterator it = pDemo->howitzer.projectile->paths.rbegin(); it != pDemo->howitzer.projectile->paths.rend(); it++)
        {
            gout.drawProjectile((*it), 0.5 * (double)i++);
        }
@@ -161,10 +158,12 @@ void callBack(const Interface* pUI, void* p)
        label.setPixelsY(460);
        gout.setPosition(label);
        gout << "hang time: " << pDemo->hangTime << "s\n"
-           << "distance:  " << pDemo->projectile.getPosition().getMetersX() << "m\n"
-           << "altitude:  " << pDemo->projectile.getAltitude() << " m\n"
-           << "speed:     " << pDemo->projectile.getSpeed() << " m/s\n";
+           << "distance:  " << pDemo->howitzer.projectile->getPosition().getMetersX() << "m\n"
+           << "altitude:  " << pDemo->howitzer.projectile->getAltitude() << " m\n"
+           << "speed:     " << pDemo->howitzer.projectile->getSpeed() << " m/s\n";
    }
+   else
+       pDemo->howitzer.canFire = true;
    
        
 

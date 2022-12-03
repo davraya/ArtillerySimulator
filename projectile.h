@@ -22,6 +22,7 @@ public:
 	double setAirTime(double airTime) { this->airTime = airTime; };
 	void increaseAirTime(double increment) { airTime += increment; };
 
+	void initStatus();
 	void computeNewPosition();
 	vector<Position> paths;
 private:

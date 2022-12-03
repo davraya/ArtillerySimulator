@@ -33,3 +33,8 @@ void Projectile::computeNewPosition()
 	};
 }
 
+
+void Projectile::initStatus()
+{
+	this->physics.initStatus();
+}
