@@ -132,7 +132,10 @@ void callBack(const Interface* pUI, void* p)
 
    // draw the ground first
    pDemo->ground.draw(gout);
-   gout.setPosition(Position(4000, 8000));
+   Position labelA;
+   labelA.setPixelsX(500);
+   labelA.setPixelsY(480);
+   gout.setPosition(labelA);
    gout << "The angle of the barell is:" <<fixed << setprecision(3) << howitzerAngle->getDegrees();
 
    // draw the howitzer
