@@ -86,7 +86,7 @@ void callBack(const Interface* pUI, void* p)
    //
    
    Physics::Angle* howitzerAngle = pDemo->howitzer.getAngle();
-   double currentAngle = howitzerAngle->getAngle();
+   double currentAngle = howitzerAngle->getRadians();
 
    // move a large amount
    if (pUI->isRight())
@@ -132,12 +132,12 @@ void callBack(const Interface* pUI, void* p)
    // draw the ground first
    pDemo->ground.draw(gout);
    gout.setPosition(Position(4000, 8000));
-   gout << "The angle of the barell is:" << howitzerAngle->getAngle();
+   gout << "The angle of the barell is:" << howitzerAngle->getRadians();
 
    // draw the howitzer
    Position howitzerPosition = pDemo->howitzer.getPosition();
 
-   gout.drawHowitzer(howitzerPosition, howitzerAngle->getAngle(), pDemo->time);
+   gout.drawHowitzer(howitzerPosition, howitzerAngle->getRadians(), pDemo->time);
    
    // draw the projectile
 
