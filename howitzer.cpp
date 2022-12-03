@@ -5,7 +5,7 @@
 void Howitzer::fire()
 {
     
-   projectile.initPosition(position.getMetersX(), position.getMetersY(), a.getRadians());
+   projectile.initPosition(position.getMetersX(), position.getMetersY(), a.getDegrees());
 
 }
 

@@ -38,6 +38,7 @@ public:
    vector<Position>::reverse_iterator getReverseIteratorEnd();
    void displayProjectileStatus();
    double getProjectileAirTime();
+   void setPositionX(double x);
 
 
 

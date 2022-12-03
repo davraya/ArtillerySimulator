@@ -34,11 +34,11 @@ public:
    Demo(Position ptUpperRight) :
       ptUpperRight(ptUpperRight)
       , ground(ptUpperRight)
-      , hangTime(0.0)
+      //, hangTime(0.0)
       //,angle(0.0)
    {
       // Set the horizontal position of the howitzer. This should be random.
-       srand((int)time(0));
+       //srand((int)time(0));
        int randX = (rand() % (28000 - 1000)) + 1000;
        cout << randX << endl;
        this->howitzer.setPositionX(randX);
@@ -53,7 +53,7 @@ public:
       // of a trail that fades off in the distance.
       double x = 10000;
       double y = 2500;
-      projectile.initPosition(10000, 2500, 0);
+      //projectile.initPosition(10000, 2500, 0);
       
 
    }
@@ -67,9 +67,9 @@ public:
    Position  ptUpperRight;        // size of the screen
    //double angle;                  // angle of the howitzer 
 
-   Projectile projectile;
+   //Projectile projectile;
 
-   double hangTime;                   // amount of time since the last firing
+   //double hangTime;                   // amount of time since the last firing
 };
 
 /*************************************
@@ -112,7 +112,7 @@ void callBack(const Interface* pUI, void* p)
 
    // fire that gun
    if (pUI->isSpace())
-      pDemo->hangTime = 0.0;
+      pDemo->howitzer.fire();
    //
    // perform all the game logic
    //
@@ -120,11 +120,12 @@ void callBack(const Interface* pUI, void* p)
 
 
    // advance time by half a second.
-   pDemo->hangTime += 0.5;
+   //pDemo->hangTime += 0.5;
 
    // move the projectile across the screen
 
-    pDemo->projectile.computeNewPosition();
+    //pDemo->projectile.computeNewPosition();
+   pDemo->howitzer.updateProjectilePosition();
    
 
    //
@@ -141,29 +142,32 @@ void callBack(const Interface* pUI, void* p)
    // draw the howitzer
    Position howitzerPosition = pDemo->howitzer.getPosition();
 
-   gout.drawHowitzer(howitzerPosition, howitzerAngle->getRadians(), pDemo->hangTime);
+   gout.drawHowitzer(howitzerPosition, howitzerAngle->getRadians(), pDemo->howitzer.getProjectileAirTime());
    
    // draw the projectile
 
-   double Mountain_height = pDemo->ground.getElevationMeters(pDemo->projectile.getPosition());
+   double Mountain_height = pDemo->ground.getElevationMeters(pDemo->howitzer.getProjectilePosition());
    int i = 0;
-   if (pDemo->projectile.getPosition().getMetersY() >= Mountain_height)
+   if (pDemo->howitzer.getProjectilePosition().getMetersY() >= Mountain_height)
    {
-       for (vector<Position>::reverse_iterator it = pDemo->projectile.paths.rbegin(); it != pDemo->projectile.paths.rend(); it++)
+       for (vector<Position>::reverse_iterator it = pDemo->howitzer.getReverseIteratorBegin(); it != pDemo->howitzer.getReverseIteratorEnd(); it++)
        {
            gout.drawProjectile((*it), 0.5 * (double)i++);
        }
        // draw some text on the screen
        gout.setf(ios::fixed | ios::showpoint);
        gout.precision(1);
-       Position label;
+       /*Position label;
        label.setPixelsX(560);
        label.setPixelsY(460);
        gout.setPosition(label);
        gout << "hang time: " << pDemo->hangTime << "s\n"
            << "distance:  " << pDemo->projectile.getPosition().getMetersX() << "m\n"
            << "altitude:  " << pDemo->projectile.getAltitude() << " m\n"
-           << "speed:     " << pDemo->projectile.getSpeed() << " m/s\n";
+           << "speed:     " << pDemo->projectile.getSpeed() << " m/s\n";*/
+
+       pDemo->howitzer.displayProjectileStatus();
+       
    }
    
        
