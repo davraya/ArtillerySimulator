@@ -4,8 +4,11 @@
 
 void Howitzer::fire()
 {  
-    delete projectile;
-    projectile = NULL;
+    if (projectile != NULL)
+    {
+        delete projectile;
+        projectile = NULL;
+    }
     projectile = new Projectile();
    projectile->initStatus();
    projectile->initPosition(position.getMetersX(), position.getMetersY(), a.getDegrees());
