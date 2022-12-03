@@ -236,3 +236,28 @@ pair<double, double> Physics::updateNewPosition()
 }
 
 	
+void Physics::initStatus()
+{
+
+	m_V.setV(827.0);
+	m_A.setA(0);
+	m_F.setDF(0);
+	m_Alt.setAlt(0);
+	m_Angle.setAngle(0);
+	airDensity = 1.2250000;
+	mach = 0;
+	gravity = 9.807;
+	dragCoeffcient = 0;
+	s_V = 340.0;
+	hVel = 0;
+	vVel = 0;
+	hAcc = 0;
+	vAcc = 0;
+	x = 0;
+	y = 0;
+	t = 0;
+	time_per_frame = 0.01;
+	mass = 46.7;
+	diameter = 0.15489;
+	area = computeArea(diameter);
+}

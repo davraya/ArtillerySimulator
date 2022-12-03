@@ -20,8 +20,8 @@
 #include "howitzer.h"
 #include "physics.h"
 #include <string>
-#include <stdlib.h>
-#include <ctime>
+#include <iomanip>
+
 using namespace std;
 
 /*************************************************************************
@@ -42,6 +42,7 @@ public:
        int randX = (rand() % (28000 - 1000)) + 1000;
        cout << randX << endl;
        this->howitzer.setPositionX(randX);
+
 
 
       // Generate the ground and set the vertical position of the howitzer.
@@ -100,23 +101,29 @@ void callBack(const Interface* pUI, void* p)
 
    // move by a little
 
-   //if (pUI->isUp())
-   //   howitzerAngle += (howitzerAngle >= 0 ? -0.003 : 0.003);
-   //if (pUI->isDown())
-   //   howitzerAngle += (howitzerAngle >= 0 ? 0.003 : -0.003);
-
    if (pUI->isUp())
-      *howitzerAngle += (currentAngle >= 0 ? 0.003 : -0.003);
+       *howitzerAngle += 0.01;
    if (pUI->isDown())
-      *howitzerAngle += (currentAngle >= 0 ? -0.003 : 0.003);
+       *howitzerAngle -= 0.01;
 
    // fire that gun
    if (pUI->isSpace())
       pDemo->howitzer.fire();
+   {   
+       if (pDemo->howitzer.canFire)
+       {
+           pDemo->howitzer.fire();
+           pDemo->hangTime = 0.0;
+           pDemo->howitzer.canFire = false;
+       }
+       
+   }
+      
    //
    // perform all the game logic
    //
-
+   if (not pDemo->howitzer.canFire)
+        pDemo->howitzer.projectile->computeNewPosition();
 
 
    // advance time by half a second.
@@ -136,8 +143,11 @@ void callBack(const Interface* pUI, void* p)
 
    // draw the ground first
    pDemo->ground.draw(gout);
-   gout.setPosition(Position(4000, 8000));
-   gout << "The angle of the barell is:" << howitzerAngle->getDegrees();
+   Position labelA;
+   labelA.setPixelsX(500);
+   labelA.setPixelsY(480);
+   gout.setPosition(labelA);
+   gout << "The angle of the barell is:" <<fixed << setprecision(3) << howitzerAngle->getDegrees();
 
    // draw the howitzer
    Position howitzerPosition = pDemo->howitzer.getPosition();
@@ -146,11 +156,11 @@ void callBack(const Interface* pUI, void* p)
    
    // draw the projectile
 
-   double Mountain_height = pDemo->ground.getElevationMeters(pDemo->howitzer.getProjectilePosition());
+   double Mountain_height = pDemo->ground.getElevationMeters(pDemo->howitzer.projectile->getPosition());
    int i = 0;
-   if (pDemo->howitzer.getProjectilePosition().getMetersY() >= Mountain_height)
+   if (pDemo->howitzer.projectile->getPosition().getMetersY() >= Mountain_height)
    {
-       for (vector<Position>::reverse_iterator it = pDemo->howitzer.getReverseIteratorBegin(); it != pDemo->howitzer.getReverseIteratorEnd(); it++)
+       for (vector<Position>::reverse_iterator it = pDemo->howitzer.projectile->paths.rbegin(); it != pDemo->howitzer.projectile->paths.rend(); it++)
        {
            gout.drawProjectile((*it), 0.5 * (double)i++);
        }
@@ -169,6 +179,8 @@ void callBack(const Interface* pUI, void* p)
        pDemo->howitzer.displayProjectileStatus();
        
    }
+   else
+       pDemo->howitzer.canFire = true;
    
        
 
