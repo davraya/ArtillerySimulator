@@ -6,6 +6,7 @@
 #include "uiDraw.h"
 #include <stdlib.h>
 #include <ctime>
+#include "uiInteract.h" // for INTERFACE
 
 class Howitzer
 {
@@ -32,13 +33,13 @@ public:
 
 	Position position;
 
-   void moveBarrel();
+   void controlBarrel(const Interface* pUI);
    void fire();
    void updateProjectilePosition();
    Physics::Angle* getAngle() { return &a; };
    Position getPosition() const;
    bool canFire;
-   void setAngle();
+
    Projectile *projectile;
 
    Position getProjectilePosition();

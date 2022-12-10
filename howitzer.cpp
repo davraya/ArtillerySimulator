@@ -2,6 +2,35 @@
 
 
 
+void Howitzer::controlBarrel(const Interface* pUI)
+{
+
+   // move a large amount
+   if (pUI->isRight())
+      a += 0.05;
+   if (pUI->isLeft())
+      a -= 0.05;
+
+   // move by a little
+
+   if (pUI->isUp())
+      a += 0.01;
+   if (pUI->isDown())
+      a -= 0.01;
+
+   // fire that gun
+   if (pUI->isSpace())
+   {
+      if (canFire)
+      {
+         fire();
+         canFire = false;
+      }
+
+   }
+
+}
+
 void Howitzer::fire()
 {  
     delete projectile;
@@ -15,7 +44,6 @@ void Howitzer::fire()
 void Howitzer::updateProjectilePosition()
 {
    projectile->increaseAirTime(0.5);
-   projectile->computeNewPosition();
 
 }
 
